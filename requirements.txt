@@ -1,0 +1,4 @@
+elasticsearch===7.8.0
+pandas
+matplotlib
+python-dotenv
