@@ -5,3 +5,5 @@ python-dotenv
 scipy
 minio
 jinja2
+scikit-learn
+statsmodels
