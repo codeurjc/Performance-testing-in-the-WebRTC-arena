@@ -1,8 +1,10 @@
 elasticsearch===7.8.0
-pandas
+pandas[html]
 matplotlib
 python-dotenv
 scipy
 minio
 jinja2
 statsmodels
+seaborn
+ruptures
