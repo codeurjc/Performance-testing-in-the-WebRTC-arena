@@ -2,11 +2,5 @@ elasticsearch===7.8.0
 pandas[html]
 matplotlib
 python-dotenv
-scipy
-minio
 jinja2
-statsmodels
-seaborn
-ruptures
-adjustText
 orjson
