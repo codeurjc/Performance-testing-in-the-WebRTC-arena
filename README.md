@@ -2,15 +2,15 @@
 
 [![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.14731689.svg)](https://doi.org/10.5281/zenodo.14731689)
 
-Reproduction package for the paper "Performance testing in the WebRTC arena: a case study of three real-time communication systems". This description contains detailed steps to reproduce the results on the paper.
+Reproduction package for the paper "Quality of Experience under huge load for WebRTC applications: a case study of three media servers". This description contains detailed steps to reproduce the results on the paper.
 
 The almost complete reproduction package can be found in Zenodo ([https://doi.org/10.5281/zenodo.14731689](https://doi.org/10.5281/zenodo.14731689)) and contains the following files:
 
 ```
 .
 ├── dataset-combined.zip            # Raw data results of the paper ready for analysis (~17 GB uncompressed)
-├── openvidu-loadtest-3.0.0.zip     # OpenVidu LoadTest code
-├── mediafiles.zip                  # Media files used in the paper for the users in OpenVidu LoadTest
+├── openvidu-loadtest-3.0.0.zip     # OpenVidu QoE and Load Testing Tool (OQLT) code
+├── mediafiles.zip                  # Media files used in the paper for the users in OQLT
 ├── analysis.ipynb                  # Jupyter Notebook for data analysis
 ├── extract.ipynb                   # Jupyter Notebook for extraction of data from an ELK stack
 ├── .env.template                   # Template of .env file used for extraction of data
@@ -22,7 +22,7 @@ Note that the raw video recordings for the paper can't be uploaded to Zenodo as 
 ## Index
 - [Reproducing the experiments of the paper](#reproducing-the-experiments-of-the-paper)
     - [Step 1. Setup](#step-1-setup)
-    - [Step 2. Configuring and running OVLT](#step-2-configuring-and-running-ovlt)
+    - [Step 2. Configuring and running OQLT](#step-2-configuring-and-running-OQLT)
     - [Step 3. Running QoE Analysis](#step-3-running-qoe-analysis)
     - [Step 4. Results and analysis](#step-4-results-and-analysis)
 
@@ -32,11 +32,11 @@ Note that the raw video recordings for the paper can't be uploaded to Zenodo as 
 
 For the paper AWS EC2 instances were used, so an AWS account is needed, with permissions to create and terminate EC2 instances and create AMIs.
 
-OVLT also needs an ElasticSearch and Kibana stack (ELK stack from now on) for it to save relevant data, instructions for setting up version 7.8 (version used in the paper) can be found [here](https://www.elastic.co/guide/en/elasticsearch/reference/7.8/setup.html).
+OQLT also needs an ElasticSearch and Kibana stack (ELK stack from now on) for it to save relevant data, instructions for setting up version 7.8 (version used in the paper) can be found [here](https://www.elastic.co/guide/en/elasticsearch/reference/7.8/setup.html).
 
-To save the recordings and relevant stats files OVLT needs AWS S3 or MinIO.
+To save the recordings and relevant stats files OQLT needs AWS S3 or MinIO.
 
-You can find instructions for configuring and using the OpenVidu LoadTest (OVLT) version used in the paper in the README.md file inside `openvidu-loadtest-3.0.0.zip` (unzip the tool before using). OVLT needs Java 11+ and Maven 3+ installed.
+You can find instructions for configuring and using the OpenVidu QoE and Load Testing Tool (OQLT) version used in the paper in the README.md file inside `openvidu-loadtest-3.0.0.zip` (unzip the tool before using). OQLT needs Java 11+ and Maven 3+ installed.
 
 Instructions for deploying OpenVidu 2 with Kurento and Mediasoup (version 2.30.0 was used in the paper) can be found [here](https://docs.openvidu.io/en/2.30.0/deployment/enterprise/aws/). Remove the limits on bandwidth by setting the following configuration parameters to 0:
 
@@ -49,7 +49,7 @@ Information on how to do this can be found [here](https://docs.openvidu.io/en/2.
 
 Instructions for deploying LiveKit with Pion can be found [here](https://docs.livekit.io/home/self-hosting/deployment/) (version 1.6.1 of LiveKit was used in the paper, can be found [here](https://github.com/livekit/livekit/releases/tag/v1.6.1))
 First, you will need to configure the tool to run against an OpenVidu or LiveKit deployment, as well as configuring the connections to the ELK stack
-For more detail explanations on configuring OVLT, see the `README.md` Markdown file in
+For more detail explanations on configuring OQLT, see the `README.md` Markdown file in
 
 In short, you will need:
     - An OpenVidu or LiveKit deployment
@@ -57,11 +57,11 @@ In short, you will need:
     - An ELK stack
     - AWS access to EC2, AMI creation and S3 (or MinIO as an alternative)
 
-### Step 2. Configuring and running OVLT
+### Step 2. Configuring and running OQLT
 
 First unzip `openvidu-loadtest-3.0.0.zip`. The directory where the project is unzipped will be known as root directory.
 
-You will need to create the AWS AMI and a Security Group for the User Emulators to create the EC2 instances (also known as Browser Emulators). For this, refer to the `README.md` file in the root directory of OVLT, section Usage instructions > Launch workers > For testing on AWS
+You will need to create the AWS AMI and a Security Group for the User Emulators to create the EC2 instances (also known as Browser Emulators). For this, refer to the `README.md` file in the root directory of OQLT, section Usage instructions > Launch workers > For testing on AWS
 
 After this, you can configure the controller. More information about configuring the controller can be found in the README.md, section Usage instructions > Execute controller.
 
@@ -235,7 +235,7 @@ After a successful run of a test, you can find in the S3/MinIO Bucket the follow
 - stats: WebRTC stats recorded by the user emulators
 - Multiple webm files: Recordings of the communication between users
 
-With the recordings, we can now analyze the Quality of Experience (QoE) using Full-Reference models as described in the paper. The resources used for QoE analysis can be found in the OVLT tool, for this, from the root directory, use the command:
+With the recordings, we can now analyze the Quality of Experience (QoE) using Full-Reference models as described in the paper. The resources used for QoE analysis can be found in the OQLT tool, for this, from the root directory, use the command:
 
 ```bash
 cd browser-emulator
@@ -305,7 +305,7 @@ For the results' analysis, we have 2 Jupyter Notebooks. Both Notebooks have the 
 - `extract.ipynb`: For extraction of data from an ELK stack
 - `analysis.ipynb`: For data analysis
 
-To analyze new tests after running OVLT and doing the QoE Analysis, first we need to extract the relevant data from ELK for the analysis Jupyter Notebook. For this, we will use the `extract.ipynb` Notebook.
+To analyze new tests after running OQLT and doing the QoE Analysis, first we need to extract the relevant data from ELK for the analysis Jupyter Notebook. For this, we will use the `extract.ipynb` Notebook.
 
 - First, edit the `.env.template` file, set the location of your ELK stack and change the file name to `.env`.
 - Next, create a directory `dfs_final` in the directory where both Notebooks reside:
@@ -315,14 +315,14 @@ mkdir dfs_final
 - You will need to change the variables on the third cell to the specific index name and test times for your tests.
     - The first index_list_names contains the index name in ELK for the first test to analyze, and its duration from start (min) to finish (max) should be in the first position of test times.
 
-Run the Notebook and the CSV data files from ELK by OVLT will be extracted.
+Run the Notebook and the CSV data files from ELK by OQLT will be extracted.
 
 For the analysis Notebook, you will need to edit the second cell variables using the same values you used in the extract Notebook.
 
 These are the necessary directories where the data files must be:
 - `dfs_final`: Extracted files from ELK
-- `stats`: WebRTC stats files from OVLT, as saved in S3/MinIO, should be saved for each test in directory stats/[index_name]/, where [index_name] is a name in the index_list_names array
-- `logs`: Log files from OVLT Controller, saved in logs/[index_name].log for each test
+- `stats`: WebRTC stats files from OQLT, as saved in S3/MinIO, should be saved for each test in directory stats/[index_name]/, where [index_name] is a name in the index_list_names array
+- `logs`: Log files from OQLT Controller, saved in logs/[index_name].log for each test
 - `qoe`: Results files of QoE Analysis, saved in qoe/[index_name]/ for each test
 
 Now you can run the Notebook to obtain all plots and tables seen in the paper and some more. These are also saved in the `plots` and `tables` directories.
